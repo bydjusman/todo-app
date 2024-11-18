@@ -1,101 +1,132 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+
+// Define the type for a Todo
+interface Todo {
+  id: number;
+  title: string;
+  description: string;
+}
+
+export default function TodoApp() {
+  const [todos, setTodos] = useState<Todo[]>([]); // Define the todos state as an array of Todo objects
+  const [title, setTitle] = useState<string>(""); // Define title state as a string
+  const [description, setDescription] = useState<string>(""); // Define description state as a string
+
+  const addTodo = () => {
+    if (!title || !description) {
+      alert("Please enter both title and description!");
+      return;
+    }
+
+    // Add new todo to the list
+    setTodos((prevTodos) => {
+      const newTodo: Todo = {
+        id: Date.now(), // Unique ID
+        title,
+        description,
+      };
+      console.log("Updated Todos:", [...prevTodos, newTodo]); // Debug
+      return [...prevTodos, newTodo]; // Add new todo to the list
+    });
+
+    setTitle(""); // Clear title input
+    setDescription(""); // Clear description input
+  };
+
+  const deleteTodo = (id: number) => {
+    // Filter out the todo with the given id
+    setTodos((prevTodos) => {
+      const updatedTodos = prevTodos.filter((todo) => todo.id !== id);
+      console.log("After Deletion:", updatedTodos); // Debug
+      return updatedTodos;
+    });
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full">
+        <h1 className="text-2xl font-bold mb-4 text-center">Todo App</h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+        {/* Input Fields */}
+        <div className="mb-4">
+          <input
+            type="text"
+            placeholder="Enter Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded mb-2"
+          />
+          <textarea
+            placeholder="Enter Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
+          />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+
+        {/* Add Todo Button */}
+        <button
+          onClick={addTodo}
+          className="w-full bg-blue-600 text-white py-2 rounded mb-4 hover:bg-blue-700"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          Add Todo
+        </button>
+
+        {/* Todo Table */}
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <table className="w-full text-sm text-left text-gray-500">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+              <tr>
+                <th scope="col" className="px-6 py-3">
+                  Title
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Description
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {todos.length > 0 ? (
+                todos.map((todo) => (
+                  <tr
+                    key={todo.id}
+                    className="bg-white border-b hover:bg-gray-100"
+                  >
+                    <td className="px-6 py-4 font-medium text-gray-900">
+                      {todo.title || "No Title"}
+                    </td>
+                    <td className="px-6 py-4">
+                      {todo.description || "No Description"}
+                    </td>
+                    <td className="px-6 py-4">
+                      <button
+                        onClick={() => deleteTodo(todo.id)}
+                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={3} // Corrected colSpan as number
+                    className="text-center py-4 text-gray-500 font-medium"
+                  >
+                    No todos added yet!
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }
