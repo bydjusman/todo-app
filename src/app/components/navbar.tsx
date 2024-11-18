@@ -32,13 +32,13 @@ const Navbar = () => {
         </nav>
         <div className="flex items-center space-x-4">
           {/* Link for Login */}
-          <Link href="/login/">
+          <Link href="https://app.todoist.com/auth/login">
             <button className="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-gray-100 transition">
               Login
             </button>
           </Link>
           {/* Link for Sign Up */}
-          <Link href="/signup">
+          <Link href="https://app.todoist.com/auth/signup">
             <button className="bg-gray-200 text-blue-600 px-4 py-2 rounded-lg hover:bg-gray-300 transition">
               Sign Up
             </button>
